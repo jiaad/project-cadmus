@@ -3,9 +3,10 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "test": "jest",
+    "test": "cross-env NODE_ENV=test jest --testTimeout=10000  --watch-all ",
+    "test:report": "cross-env NODE_ENV=test jest --testTimeout=10000  --coverage --runInBand --detectOpenHandles",
     "start": "nodemon ./server/bin/www",
-    "start-dev": "nodemon --exec babel-node ./server/bin/www",
+    "start-dev": "cross-env NODE_ENV=devlopment nodemon --exec babel-node ./server/bin/www",
     "babel-node": "babel-node --presets='@babel/preset-env' --ignore='foo|bar|baz'",
     "start-babel": "nodemon --exec npm run babel-node -- ./server/bin/www",
     "build": "babel ./server/app.js --out-file app-compiled.js"
@@ -14,7 +15,9 @@
     "testEnvironment": "node",
     "coveragePathIgnorePatterns": [
       "/node_modules/"
-    ]
+    ],
+    "testPathIgnorePatterns": ["/setUps/"]
+
   },
   "dependencies": {
     "@babel/polyfill": "^7.11.5",
@@ -36,6 +39,7 @@
     "@babel/core": "^7.11.6",
     "@babel/node": "^7.10.5",
     "@babel/preset-env": "^7.11.5",
+    "cross-env": "^7.0.2",
     "jest": "^26.4.2",
     "supertest": "^4.0.2"
   }
