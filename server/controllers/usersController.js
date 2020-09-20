@@ -21,12 +21,25 @@ module.exports = {
   show: asyncHandler(async (req, res, next) => {
     let id = req.params.id
     let user = await User.findById(id)
-    debugger
-    console.log('ususususus : ', user)
+    console.log('show controller: : ', user)
     if(!user){
       return next(new ErrorResponse('User not found with this id', httpStatusCode.NOT_FOUND))
     }
     res.status(httpStatusCode.OK).json({success: true, data: user})
+  }),
+  update: asyncHandler(async (req, res, next) => {
+    const user = await User.findByIdAndUpdate(req.params.id, req.body, {new: true, runValidators: true})
+    res.status(200).json({success: true, data: user, msg: 'Updated successfully'})
+
+    // const id = req.params.id
+    // let user = await User.findById(id)
+    // if(!user){
+    //   next(new ErrorResponse(`User not Found`, httpStatusCode.NOT_FOUND))
+    // }
+    // user = await User.uFindAndModify(id, req.body, {
+      //$set: true
+    // })
+    // res.status(httpStatusCode.OK).json({success: true, msg: "Resource updated successfully",data: user});
   })
   
 }
