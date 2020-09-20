@@ -27,19 +27,15 @@ module.exports = {
     }
     res.status(httpStatusCode.OK).json({success: true, data: user})
   }),
+
   update: asyncHandler(async (req, res, next) => {
     const user = await User.findByIdAndUpdate(req.params.id, req.body, {new: true, runValidators: true})
     res.status(200).json({success: true, data: user, msg: 'Updated successfully'})
+  }),
 
-    // const id = req.params.id
-    // let user = await User.findById(id)
-    // if(!user){
-    //   next(new ErrorResponse(`User not Found`, httpStatusCode.NOT_FOUND))
-    // }
-    // user = await User.uFindAndModify(id, req.body, {
-      //$set: true
-    // })
-    // res.status(httpStatusCode.OK).json({success: true, msg: "Resource updated successfully",data: user});
-  })
+  deleteUser: asyncHandler(async (req, res, next) => {
+    await User.findByIdAndDelete(req.params.id)
+    res.status(httpStatusCode.OK).json({success: true, msg: "successfully deleted user", data: {}});
+  }),
   
 }
