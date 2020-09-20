@@ -7,7 +7,13 @@
         "targets": "> 0.25%, not dead",
         "useBuiltIns": "usage",
         "corejs": "3.6.4"
-      }
+      },
+      
     ]
+  ],
+  "ignore": [
+    "node_modules",
+    "__tests__/**/*.js",
+    "__tests__/**/**/.js"
   ]
 }

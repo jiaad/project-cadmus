@@ -1,4 +1,4 @@
-import env from 'dotenv/config'
+const env = require('dotenv').config()
 // env.config()
 import createError from 'http-errors';
 import express from 'express';

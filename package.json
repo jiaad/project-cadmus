@@ -9,7 +9,9 @@
     "start-dev": "cross-env NODE_ENV=devlopment nodemon --exec babel-node ./server/bin/www",
     "babel-node": "babel-node --presets='@babel/preset-env' --ignore='foo|bar|baz'",
     "start-babel": "nodemon --exec npm run babel-node -- ./server/bin/www",
-    "build": "babel ./server/app.js --out-file app-compiled.js"
+    "build": "babel ./server/app.js --out-file ./server/appCompiled.js",
+    "build:dir": "rm -rf server-dist && npx babel server --out-dir server-dist",
+    "start:dist": "NODE_ENV=production nodemon ./server_dist/bin/www"
   },
   "jest": {
     "testEnvironment": "node",
