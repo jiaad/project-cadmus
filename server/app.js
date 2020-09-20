@@ -14,7 +14,11 @@ import errorHandler from './middleware/errorHandler'
 var indexRouter = require('./routes/index');
 
 const connectDB = require('./config/mongooseConnect')
-connectDB()
+if(process.env.NODE_ENV === 'production' ){
+  connectDB()
+} else if(process.env.NODE_ENV === 'devlopment'){
+  connectDB()
+}
 
 
 // view engine setup

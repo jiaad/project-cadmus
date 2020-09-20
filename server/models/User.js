@@ -2,37 +2,43 @@ const mongoose              = require('mongoose')
 const bcrypt                = require('bcryptjs');
 
 const userSchema = new mongoose.Schema({
-	name: {
-		first: {
-				type: String,
-				required: [true, "Please enter your first name"]
-		},
-		last: {
-			type: String,
-			required: [true, "please enter your first name"]
-		}
-  },
-    email: {
-        type: String,
-				required:  [true, "Please enter your email"],
-				unique: [true, 'Email allready exists']
+  name: {
+    first: {
+      type: String,
+      required: [true, "Please enter your first name"]
     },
+    last: {
+      type: String,
+      required: [true, "Please enter your last name"]
+    }
+  },
+  email: {
+    type: String,
+    required:  [true, "Please enter your email"],
+    unique: [true, 'Email allready exists']
+  },
     // dateOfBirth: {
     //     type: Date,
     //     required: [true, "Please choose your date of birth"]
     // },
-    position: String,
-    isActive: Boolean,
-    dateJoined: {
-        type: Date,
-        default: Date.now
-    },
-    password: {
-        type: String,
-        required: [true, "Please enter password"],
-        select: false,
-        minlength: [6, 'Password must be at least 6 characters']
-    }//,
+  position: {
+    type: String,
+    required: [true, "Please enter your position"]
+  },
+  isActive: {
+    type:Boolean,
+    required: [true, "Please enter your status"]
+  },
+  dateJoined: {
+    type: Date,
+    default: Date.now
+  },
+  password: {
+    type: String,
+    required: [true, "Please enter your password"],
+    select: false,
+    minlength: [6, 'Password must be at least 6 characters']
+  }//,
     //resetPasswordToken: String,
     //resetPasswordExpire: Date
 
@@ -46,20 +52,16 @@ userSchema.virtual('fullName').get(function(){
     return this.name.first + ' ' + this.name.last
 })
 
-// userSchema.pre('save', function (next) {
-//     const SALT_WORK_FACTOR = 10
-//     var user = this;
-//     if (!user.isModified('password')) return next()
-//     bcrypt.genSalt(SALT_WORK_FACTOR, function(err, salt) {
-//         if (err) return next(err)
-//         bcrypt.hash(user.password, salt, function(err, hash) {
-//         if (err) return next(err)
-//             // Store hash in your password DB.
-//             user.password = hash
-//             next()
-//         })
-//     })
-// })
+userSchema.pre('save', async function (next) {
+  const password = this.password
+  const saltRounds = 10;
+  if (!this.isModified('password')) return next()
+  const hashedPassword = await bcrypt.hash(password, saltRounds)
+  this.password = hashedPassword
+  next()
+})
+
+
 
 userSchema.method.comparePassword = function (candidatePassword, cb) {
     bcrypt.compare(candidatePassword, this.password , function (err, isMatch) {
