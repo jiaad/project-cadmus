@@ -7,7 +7,7 @@ const unknownError = (req, res, next) => {
 }
 
 var errorHandler = function(err, req, res, next) {
-  console.log('error name : ', err)
+  console.log('ERROR HANDLER : : ', err)
 let error = {...err}
 error.message = err.message
   // Log to Console For Dev
