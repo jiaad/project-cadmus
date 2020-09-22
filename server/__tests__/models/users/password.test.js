@@ -17,7 +17,7 @@ const params = {
   isActive: true
 }
 afterEach(async () => {
-  await User.deleteMany({})
+  await User.deleteMany()
 })
 
 describe('User password Hash', () => {

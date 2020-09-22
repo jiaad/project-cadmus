@@ -7,7 +7,7 @@ const ErrorResponse = require('../utils/errorResponse');
 // }
 
 var errorHandler = function(err, req, res, next) {
-  console.log('ERROR HANDLER : : ', err)
+  console.log('ERROR HANDLER : : ', err.message)
 let error = {...err}
 error.message = err.message
   // Log to Console For Dev
@@ -19,6 +19,7 @@ error.message = err.message
     const message = `Ressource not found`
     error = new ErrorResponse(message, 404);
   }
+  console.log('ERROR HANDLER 2 : : ', err.message)
 
   if (err.code === 11000) {
     const message = `Duplicate field value entered`
@@ -31,6 +32,8 @@ error.message = err.message
     const message = Object.values(err.errors).map(val => val.message)
     error = new ErrorResponse(message, 400)
   }
+  console.log('ERROR HANDLER 3 : : ', err.message)
+
 		res.status(error.statusCode || 500).json({ success: false, error: error.message || 'Server Error' });
 	};
 

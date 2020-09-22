@@ -3,6 +3,8 @@ import httpCode from 'http-status-codes'
 import {index, create, show, update, deleteUser} from '../controllers/usersController'
 import authenticateJWT from '../middleware/Authenticate'
 var router = express.Router();
+
+
 /* GET users listing. */
 router.get('/',authenticateJWT, index);
 router.post('/create', create)

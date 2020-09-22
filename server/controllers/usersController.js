@@ -7,7 +7,7 @@ import ErrorResponse from '../utils/errorResponse'
 module.exports = {
   index: asyncHandler(async (req, res, next) => {
     let users = await User.find()
-    console.error(users)
+    // console.error(users)
     res.status(httpStatusCode.OK).json({title: 'users',data: users});
   }),
 
