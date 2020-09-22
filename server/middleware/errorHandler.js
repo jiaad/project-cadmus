@@ -1,17 +1,17 @@
 const ErrorResponse = require('../utils/errorResponse');
 
-const unknownError = (req, res, next) => {
-    const err = new Error('Error unknown ::(')
-    err.status = 400
-    next(err)
-}
+// const unknownError = (req, res, next) => {
+//     const err = new Error('Error unknown ::(')
+//     err.status = 400
+//     next(err)
+// }
 
 var errorHandler = function(err, req, res, next) {
   console.log('ERROR HANDLER : : ', err)
 let error = {...err}
 error.message = err.message
   // Log to Console For Dev
-  console.log( err.message, err.stack.red);
+  console.log( err.message, err.stack);
   console.log('===============================')
 
   // MONGOOSE BAD OBJECT
