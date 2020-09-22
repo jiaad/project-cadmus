@@ -1,5 +1,6 @@
-const mongoose              = require('mongoose')
-const bcrypt                = require('bcryptjs');
+import mongoose from 'mongoose'
+import bcrypt from  'bcryptjs';
+import jwt from 'jsonwebtoken';
 
 const userSchema = new mongoose.Schema({
   name: {
@@ -36,11 +37,11 @@ const userSchema = new mongoose.Schema({
   password: {
     type: String,
     required: [true, "Please enter your password"],
-    select: false,
+    // select: false,
     minlength: [6, 'Password must be at least 6 characters']
-  }//,
-    //resetPasswordToken: String,
-    //resetPasswordExpire: Date
+  },
+    resetPasswordToken: String,
+    resetPasswordExpire: Date
 
 },
 {
@@ -53,23 +54,34 @@ userSchema.virtual('fullName').get(function(){
 })
 
 userSchema.pre('save', async function (next) {
-  const password = this.password
-  const saltRounds = 10;
+  const saltRounds = await(bcrypt.genSalt(10))
   if (!this.isModified('password')) return next()
-  const hashedPassword = await bcrypt.hash(password, saltRounds)
+  const hashedPassword = await bcrypt.hash(this.password, saltRounds)
   this.password = hashedPassword
   next()
 })
 
 
 
-userSchema.method.comparePassword = function (candidatePassword, cb) {
-    bcrypt.compare(candidatePassword, this.password , function (err, isMatch) {
-        if(err) return cb(err)
-        cb(null, isMatch)
-    })
+userSchema.methods.comparePassword = async function (candidatePassword) {
+  return await bcrypt.compare(candidatePassword,this.password)
 }
 
+// Match user entered password to hashed password in database
+// userSchema.methods.comparePassword = async function (enteredPassword) {
+//   return await bcrypt.compare(enteredPassword, this.password);
+// };
+
+userSchema.methods.signJWT = function () {
+  const ALGO = 'RS256'
+  return  jwt.sign({ id: this._id, fullName: this.fullName }, process.env.JWT_SECRET, {expiresIn: process.env.JWT_EXPIRE })
+}
+
+// userSchema.methods.signedJwtToken = function () {
+//   return jwt.sign({ id: this._id}, process.env.JWT_SECRET,{
+//       expiresIn: process.env.JWT_EXPIRE
+//   })
+// }
 // userSchema.post('save', function(error, doc, next) {
 //   if (error.name === 'MongoError' && error.code === 11000) {
 //     next(new Error('There was a duplicate key error'));
