@@ -1,4 +1,3 @@
-const env = require('dotenv').config()
 // env.config()
 import createError from 'http-errors';
 import express from 'express';
@@ -10,6 +9,9 @@ import router  from  './routes/index'
 import mongoose from 'mongoose'
 import errorHandler from './middleware/errorHandler'
 // const errorHandler = require('./middleware/errorHandler')
+
+// ENV AFTER IMOORTS
+const env = require('dotenv').config()
 
 var indexRouter = require('./routes/index');
 
