@@ -7,7 +7,7 @@ const { deleteOne } = require('../../../models/User')
 const databaseName = 'mern-job-test'
 const dbConnect = require('../../setUps/testDb')
 const users = require('../../setUps/usersSeed')
-
+const jwt = require('jsonwebtoken')
 
 
 // beforeAll(async function  () {
@@ -20,24 +20,37 @@ const users = require('../../setUps/usersSeed')
 // })
 
 beforeEach(async () => {
-  // await User.deleteMany({})
   await User.create(users)
 })
 
 afterEach(async () => {
-  await User.deleteMany({})
+  await User.deleteMany()
 })
+// beforeAll(async (done) => {
+  const params = {
+    name: {
+      first: "john",
+      last:"cena"
+    },
+    email: "john@cena.com",
+    password: "johncena",
+    position: "dev web",
+    isActive: true
+  }
+
+// })
 // afterEach(async () => {
 // })
 // describe('POST end points for user on /api/V1/users/cerate', async () => {
   it('should Create a USER', async (done) => {
+    User.deleteMany()
     const res = await request.post('/api/v1/users/create')
       .send({
         "name": {
           "first": "jiad",
           "last": "tusher"
       },
-      "email": "gohan@gmail.com",
+      "email": "cellsaga@gmail.com",
       "position": "freelance",
       "isActive": true,
       "password": "azerty"
@@ -45,7 +58,8 @@ afterEach(async () => {
       .set('Accept', 'application/json')
       .expect('Content-Type', /json/)
       .expect(201)
-      const email = "gohan@gmail.com"
+
+      const email = "cellsaga@gmail.com"
       const user = await User.findOne({email})
       // assert(response.body.data, user)
       expect(res.body.data.email).toEqual(user.email)
@@ -69,23 +83,31 @@ it('should return ressource not found', async () => {
     // const user = User.findById({id: '121FF465dfbdd56'}) 
 });
 
-it('should show all the users in index page', async () => {
-  const res = request
+it('should ask for Auth /api/v1/users', async () => {
+
+    const res =  await request
     .get('/api/v1/users')
     .set('Accept', 'application/json')
-    .expect('Content-Type', 'application/json')
-    .expect(200)
+    .expect(401)
+    // .expect('Content-Type', 'application/json')
 });
-test('should show ell users api/v1/users', async () => {
+it('should show all users api/v1/users', async (done) => {
+  const user = await User.create(params)
+  const auth = await request
+    .post('/api/v1/auth/login')
+    .send({email: user.email, password: 'johncena'})
+    .set('Accept', 'application/json')
+    const token = auth.body.token
   const res = await request
     .get('/api/v1/users')
     .set('Accept', 'application/json')
+    .set('Authorization', `Bearer ${token}`)
     .expect('Content-Type', /json/)
     .expect(200)
-    console.log(users)
+    done()
 });
 
-test('should show 404 and user not found message', async () => {
+it('should show 404 and user not found message', async () => {
   const res = await request
     .get('/api/v1/users/5f63d16ab2cc340bac605923')
     .set('Accept', 'application/json')
