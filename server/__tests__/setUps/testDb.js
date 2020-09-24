@@ -1,8 +1,11 @@
+/* eslint-disable no-restricted-syntax */
+/* eslint-disable no-await-in-loop */
 const mongoose = require('mongoose')
+
 mongoose.set('useCreateIndex', true)
 mongoose.promise = global.Promise
 
-async function removeAllCollections () {
+async function removeAllCollections() {
   const collections = Object.keys(mongoose.connection.collections)
   for (const collectionName of collections) {
     const collection = mongoose.connection.collections[collectionName]
@@ -10,7 +13,7 @@ async function removeAllCollections () {
   }
 }
 
-async function dropAllCollections () {
+async function dropAllCollections() {
   const collections = Object.keys(mongoose.connection.collections)
   for (const collectionName of collections) {
     const collection = mongoose.connection.collections[collectionName]
@@ -21,18 +24,17 @@ async function dropAllCollections () {
       if (error.message === 'ns not found') return
       // This error occurs when you use it.todo. You can
       // safely ignore this error too
-      if (error.message.includes('a background operation is currently running')) return
+      if (error.message.includes('a background operation is currently running'))
+        return
       console.log(error.message)
     }
   }
 }
 
-module.exports = { 
-
-  setUpDB(databaseName){
-
-    beforeAll(async function  () {
-      const url =  `mongodb://127.0.0.1/${databaseName}`
+module.exports = {
+  setUpDB(databaseName) {
+    beforeAll(async function () {
+      const url = `mongodb://127.0.0.1/${databaseName}`
       await mongoose.connect(url, { useNewUrlParser: true })
       console.log(`MONGODB CONNECTED SUCCESSFULLY: ${databaseName}`)
       // await dbSetup(url)
@@ -48,5 +50,5 @@ module.exports = {
       await dropAllCollections()
       await mongoose.connection.close()
     })
-  } 
-} 
+  },
+}

@@ -1,22 +1,19 @@
-const { ExpectationFailed } = require('http-errors');
-const supertest = require('supertest');
-const app = require('../../../app');
-const request = supertest(app)
-const User = require('../../../models/User');
+const User = require('../../../models/User')
 const { setUpDB } = require('../../setUps/testDb')
+
 setUpDB('mern-user-test-password')
 
 const params = {
   name: {
-    first: "john",
-    last:"cena"
+    first: 'john',
+    last: 'cena',
   },
-  email: "john@cena.com",
-  password: "johncena",
-  position: "dev web",
-  isActive: true
+  email: 'johnnny@cena.com',
+  password: 'johncena',
+  position: 'dev web',
+  isActive: true,
 }
-afterEach(async () => {
+beforeEach(async () => {
   await User.deleteMany()
 })
 
@@ -27,5 +24,5 @@ describe('User password Hash', () => {
     const createdUser = newUser.save()
     const actualPassword = params.password
     expect(actualPassword).not.toEqual(createdUser.password)
-  });
-});
+  })
+})

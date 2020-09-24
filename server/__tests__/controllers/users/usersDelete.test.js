@@ -1,22 +1,23 @@
-const supertest = require('supertest');
-const app = require('../../../app');
-const request = supertest(app)
-const User = require('../../../models/User');
-const { setUpDB } = require('../../setUps/testDb')
-setUpDB('mern-user-test-delete')
+/* eslint-disable no-underscore-dangle */
+const supertest = require('supertest')
+const app = require('../../../app')
 
+const request = supertest(app)
+const User = require('../../../models/User')
+const { setUpDB } = require('../../setUps/testDb')
+
+setUpDB('mern-user-test-delete')
 
 const params = {
   name: {
-    first: "john",
-    last:"cena"
+    first: 'john',
+    last: 'cena',
   },
-  email: "john@cena.com",
-  password: "johncena",
-  position: "dev web",
-  isActive: true
+  email: 'john@cena.com',
+  password: 'johncena',
+  position: 'dev web',
+  isActive: true,
 }
-
 
 describe('Should delete user', () => {
   beforeEach(async () => {
@@ -35,6 +36,6 @@ describe('Should delete user', () => {
       .expect('Content-Type', /json/)
       .expect(200)
 
-      expect(res.body.success).toEqual(true)
-  });
-});
+    expect(res.body.success).toEqual(true)
+  })
+})
