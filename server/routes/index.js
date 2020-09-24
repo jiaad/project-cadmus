@@ -1,7 +1,8 @@
-import express  from 'express';
-import home  from './home';
-import users  from './users'
+import express from 'express'
+import home from './home'
+import users from './users'
 import auth from './auth'
+
 const router = express.Router()
 
 router.use('/api/v1', home)

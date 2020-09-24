@@ -1,0 +1,30 @@
+module.exports = {
+  env: {
+    browser: true,
+    es2021: true,
+  },
+  extends: ['airbnb-base', 'prettier', 'plugin:jest/recommended'],
+  plugins: ['prettier', 'jest'],
+  parserOptions: {
+    ecmaVersion: 12,
+    sourceType: 'module',
+  },
+  rules: {
+    'prettier/prettier': 'error',
+    'jest/no-disabled-tests': 'warn',
+    'jest/no-focused-tests': 'error',
+    'jest/no-identical-title': 'error',
+    'jest/prefer-to-have-length': 'warn',
+    'jest/valid-expect': 'error',
+    'no-underscore-dangle': 'off',
+    'no-console': 'off',
+    'no-shadow': 'off',
+    'no-restricted-globals': ['error', 'event', 'fdescribe'],
+    'prefer-destructuring': 'off',
+    'import/no-named-as-default': 0,
+    'import/prefer-default-export': 'off',
+    'import/named': 'off',
+    'func-names': 'off',
+  },
+  ignorePatterns: ['__tests__/*'],
+}

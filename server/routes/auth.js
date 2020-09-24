@@ -1,11 +1,10 @@
-import express from'express'
-import httpCode from 'http-status-codes'
-import {logout, login} from '../controllers/authController'
-import asyncHandler from '../middleware/asyncHandler'
+import express from 'express'
+import { logout, login, updatePassword } from '../controllers/authController'
 
 const router = express.Router()
 
 router.post('/login', login)
 router.get('/logout', logout)
+router.post('/:id/password-update', updatePassword)
 
-module.exports = router;
+module.exports = router

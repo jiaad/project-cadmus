@@ -1,70 +1,72 @@
+/* eslint-disable consistent-return */
+/* eslint-disable no-unused-vars */
+/* eslint-disable func-names */
 import mongoose from 'mongoose'
-import bcrypt from  'bcryptjs';
-import jwt from 'jsonwebtoken';
+import bcrypt from 'bcryptjs'
+import jwt from 'jsonwebtoken'
 
-const userSchema = new mongoose.Schema({
-  name: {
-    first: {
-      type: String,
-      required: [true, "Please enter your first name"]
+const userSchema = new mongoose.Schema(
+  {
+    name: {
+      first: {
+        type: String,
+        required: [true, 'Please enter your first name'],
+      },
+      last: {
+        type: String,
+        required: [true, 'Please enter your last name'],
+      },
     },
-    last: {
+    email: {
       type: String,
-      required: [true, "Please enter your last name"]
-    }
-  },
-  email: {
-    type: String,
-    required:  [true, "Please enter your email"],
-    unique: [true, 'Email allready exists']
-  },
+      required: [true, 'Please enter your email'],
+      unique: [true, 'Email allready exists'],
+    },
     // dateOfBirth: {
     //     type: Date,
     //     required: [true, "Please choose your date of birth"]
     // },
-  position: {
-    type: String,
-    required: [true, "Please enter your position"]
-  },
-  isActive: {
-    type:Boolean,
-    required: [true, "Please enter your status"]
-  },
-  dateJoined: {
-    type: Date,
-    default: Date.now
-  },
-  password: {
-    type: String,
-    required: [true, "Please enter your password"],
-    // select: false,
-    minlength: [6, 'Password must be at least 6 characters']
-  },
+    position: {
+      type: String,
+      required: [true, 'Please enter your position'],
+    },
+    isActive: {
+      type: Boolean,
+      required: [true, 'Please enter your status'],
+    },
+    dateJoined: {
+      type: Date,
+      default: Date.now,
+    },
+    password: {
+      type: String,
+      required: [true, 'Please enter your password'],
+      // select: false,
+      minlength: [6, 'Password must be at least 6 characters'],
+    },
     resetPasswordToken: String,
-    resetPasswordExpire: Date
-
-},
-{
-    timestamps: true
-}
+    resetPasswordExpire: Date,
+  },
+  {
+    timestamps: true,
+  }
 )
 
-userSchema.virtual('fullName').get(function(){
-    return this.name.first + ' ' + this.name.last
+userSchema.virtual('fullName').get(function () {
+  return `${this.name.first} ${this.name.last}`
 })
 
 userSchema.pre('save', async function (next) {
-  const saltRounds = await(bcrypt.genSalt(10))
+  const saltRounds = await bcrypt.genSalt(10)
   if (!this.isModified('password')) return next()
   const hashedPassword = await bcrypt.hash(this.password, saltRounds)
   this.password = hashedPassword
   next()
 })
 
-
-
 userSchema.methods.comparePassword = async function (candidatePassword) {
-  return await bcrypt.compare(candidatePassword,this.password)
+  const res = await bcrypt.compare(candidatePassword, this.password)
+  return res
 }
 
 // Match user entered password to hashed password in database
@@ -74,7 +76,11 @@ userSchema.methods.comparePassword = async function (candidatePassword) {
 
 userSchema.methods.signJWT = function () {
   const ALGO = 'RS256'
-  return  jwt.sign({ id: this._id, fullName: this.fullName }, process.env.JWT_SECRET, {expiresIn: process.env.JWT_EXPIRE })
+  return jwt.sign(
+    { id: this._id, fullName: this.fullName },
+    process.env.JWT_SECRET,
+    { expiresIn: process.env.JWT_EXPIRE }
+  )
 }
 
 // userSchema.methods.signedJwtToken = function () {
@@ -90,7 +96,7 @@ userSchema.methods.signJWT = function () {
 //   }
 // });
 
-////// TEST
+/// /// TEST
 /*
 // fetch user and test password verification
 User.findOne({ username: 'jmar777' }, function(err, user) {

@@ -1,4 +1,5 @@
-const ErrorResponse = require('../utils/errorResponse');
+/* eslint-disable no-unused-vars */
+const ErrorResponse = require('../utils/errorResponse')
 
 // const unknownError = (req, res, next) => {
 //     const err = new Error('Error unknown ::(')
@@ -6,35 +7,36 @@ const ErrorResponse = require('../utils/errorResponse');
 //     next(err)
 // }
 
-var errorHandler = function(err, req, res, next) {
+const errorHandler = (err, req, res, next) => {
   console.log('ERROR HANDLER : : ', err.message)
-let error = {...err}
-error.message = err.message
+  let error = { ...err }
+  error.message = err.message
   // Log to Console For Dev
-  console.log( err.message, err.stack);
+  console.log(err.message, err.stack)
   console.log('===============================')
 
   // MONGOOSE BAD OBJECT
   if (err.name === 'CastError') {
     const message = `Ressource not found`
-    error = new ErrorResponse(message, 404);
+    error = new ErrorResponse(message, 404)
   }
-  console.log('ERROR HANDLER 2 : : ', err.message)
 
   if (err.code === 11000) {
     const message = `Duplicate field value entered`
-    error = new ErrorResponse(message, 400);
+    error = new ErrorResponse(message, 400)
   }
 
   // Mongoose Validation Error
 
   if (err.name === 'ValidationError') {
-    const message = Object.values(err.errors).map(val => val.message)
+    const message = Object.values(err.errors).map((val) => val.message)
     error = new ErrorResponse(message, 400)
   }
   console.log('ERROR HANDLER 3 : : ', err.message)
 
-		res.status(error.statusCode || 500).json({ success: false, error: error.message || 'Server Error' });
-	};
+  res
+    .status(error.statusCode || 500)
+    .json({ success: false, error: error.message || 'Server Error' })
+}
 
-module.exports = errorHandler//, unknownError]
+module.exports = errorHandler // , unknownError]

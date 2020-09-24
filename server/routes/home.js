@@ -1,8 +1,8 @@
-import express from 'express';
-import {index} from '../controllers/homeController'
+import express from 'express'
+import { index } from '../controllers/homeController'
 
-var router = express.Router();
+const router = express.Router()
 /* GET home page. */
-router.get('/', index);
+router.get('/', index)
 
-module.exports = router;
+module.exports = router
