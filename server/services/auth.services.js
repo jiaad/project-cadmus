@@ -1,3 +1,5 @@
+/* eslint-disable consistent-return */
+/* eslint-disable no-unused-vars */
 import httpStatusCodes from 'http-status-codes'
 import crypto from 'crypto'
 import ErrorResponse from '../utils/errorResponse'
@@ -58,4 +60,13 @@ exports.if_user_not_isVerified_or_doesnt_exists = (user, next) => {
       )
     )
   }
+}
+
+exports.reset_user_model_tokens = (user, next, httpStatusCode) => {
+  const self = user
+  self.resetPasswordToken = undefined
+  self.resetPasswordExpire = undefined
+  self.save({ validateBeforeSave: true })
+  const msg = `Email couldn't be sent`
+  return next(new ErrorResponse(msg, httpStatusCode.INTERNAL_SERVER_ERROR))
 }

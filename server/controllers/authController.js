@@ -14,6 +14,7 @@ import {
   resetPasswordTokenEmail,
   if_email_or_password_empty,
   if_user_not_isVerified_or_doesnt_exists,
+  reset_user_model_tokens,
 } from '../services/auth.services'
 
 const sendTokenResponse = (user, statusCode, res) => {
@@ -139,14 +140,12 @@ module.exports = {
     })
     res.status(200).josn({ success: true, msg: 'Successfully updated' })
   }),
+
   forgotPassword: asyncHandler(async (req, res, next) => {
     const user = await User.findOne({ email: req.body.email })
-    if (!user) {
-      return next(new ErrorResponse('Account not found', 404))
-    }
+    if (!user) return next(new ErrorResponse('Account not found', 404))
 
     const resetPasswordToken = user.generateResetPassword()
-    console.log('PASSWORD TOKEN:', resetPasswordToken)
     await user.save({ validateBeforeSave: false })
     try {
       const url = `${req.protocol}://${req.get(
@@ -156,14 +155,8 @@ module.exports = {
       const email = await resetPasswordTokenEmail(user, url)
       res.status(200).json({ success: true, data: 'Email sent' })
     } catch (e) {
-      console.error('ERROR MAILER:', e.message)
-      user.resetPasswordToken = undefined
-      user.resetPasswordExpire = undefined
-      user.save({ validateBeforeSave: false })
-      const msg = `Email couldn't be sent`
-      return next(new ErrorResponse(msg, httpStatusCodes.INTERNAL_SERVER_ERROR))
+      reset_user_model_tokens(user, next, httpStatusCodes)
     }
-
     res
       .status(httpStatusCodes.OK)
       .json({ success: true, msg: 'Message sent', data: user })
