@@ -32,6 +32,7 @@ const params = {
   position: 'freelance',
   isActive: true,
   password: 'azerty',
+  isVerified: true
 }
 beforeAll(async () => User.deleteMany())
 beforeEach(async () => await User.deleteMany({}).exec())

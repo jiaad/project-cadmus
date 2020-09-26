@@ -21,6 +21,7 @@ const params = {
   position: 'freelance',
   isActive: true,
   password: 'azerty',
+  isVerified: true
 }
 // beforeEach( async () =>{
 //   User.create(users)
@@ -45,6 +46,7 @@ describe('Authorization Pass', () => {
       position: 'freelance',
       isActive: true,
       password: 'azerty',
+      isVerified: true
     }
     const user = new User(param)
     await user.save()
