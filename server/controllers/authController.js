@@ -84,7 +84,6 @@ module.exports = {
       email: req.body.email,
       _id: token._userId,
     })
-    console.log('THE USER :', user)
     if (!user)
       return next(
         new ErrorResponse('We were unable to find a user for this token.', 400)
