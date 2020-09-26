@@ -4,6 +4,7 @@
 import mongoose from 'mongoose'
 import bcrypt from 'bcryptjs'
 import jwt from 'jsonwebtoken'
+import crypto from 'crypto'
 
 const userSchema = new mongoose.Schema(
   {
@@ -22,6 +23,11 @@ const userSchema = new mongoose.Schema(
       required: [true, 'Please enter your email'],
       unique: [true, 'Email allready exists'],
     },
+    isVerified: {
+      type: Boolean,
+      default: false,
+    },
+
     // dateOfBirth: {
     //     type: Date,
     //     required: [true, "Please choose your date of birth"]
@@ -81,6 +87,17 @@ userSchema.methods.signJWT = function () {
     process.env.JWT_SECRET,
     { expiresIn: process.env.JWT_EXPIRE }
   )
+}
+
+userSchema.methods.generateResetPassword = function async() {
+  const resetToken = crypto.randomBytes(20).toString('hex')
+  this.resetPasswordToken = crypto
+    .createHash('sha256')
+    .update(resetToken)
+    .digest('hex')
+
+  this.resetPasswordExpire = Date.now() + 10 * 60 * 1000
+  return resetToken
 }
 
 // userSchema.methods.signedJwtToken = function () {
