@@ -38,6 +38,7 @@ const userSchema = new mongoose.Schema(
     },
     isActive: {
       type: Boolean,
+      // default: true,
       required: [true, 'Please enter your status'],
     },
     dateJoined: {
