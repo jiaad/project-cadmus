@@ -34,4 +34,10 @@ const authenticateJWT = asyncHandler(async (req, res, next) => {
   }
 })
 
-export default authenticateJWT
+// const protect = (req, res, next) => {
+//   // let user = req.user
+//   // if(user.email)
+// }
+
+// module.exports = { authenticateJWT, protect }
+module.exports = authenticateJWT
