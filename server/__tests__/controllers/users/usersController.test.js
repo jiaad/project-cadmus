@@ -9,6 +9,8 @@ const User = require('../../../models/User')
 
 const databaseName = 'mern-job-test'
 const dbConnect = require('../../setUps/testDb')
+const DBMemory = require('./../../setUps/DBMemory')
+
 const users = require('../../setUps/usersSeed')
 
 // beforeAll(async function  () {
@@ -16,7 +18,10 @@ const users = require('../../setUps/usersSeed')
 // await mongoose.connect(url, { useNewUrlParser: true })
 // console.log(`MONGODB CONNECTED SUCCESSFULLY: ${databaseName}`)
 // await
-dbConnect.setUpDB('mern-job-controller')
+// dbConnect.setUpDB('mern-users-controller-jobing')
+beforeAll(async () => await DBMemory.connect());
+afterEach(async () => await DBMemory.clearDatabase());
+afterAll(async () => await DBMemory.closeDatabase());
 
 const params = {
   name: {
@@ -28,21 +33,20 @@ const params = {
   isActive: true,
   password: 'azerty',
 }
+beforeAll(async () => User.deleteMany())
+beforeEach(async () => await User.deleteMany({}).exec())
 
-beforeEach(async () => {
-  await User.deleteMany()
-  await User.create(users)
-})
-
-afterEach(async () => {
-  await User.deleteMany()
-  await User.create(users)
-
-})
 // afterEach(async () => {
+//   await User.deleteMany({}).exec();
+//   // await User.create(users)
+
 // })
+afterEach(async () => User.deleteMany({email: 'gohan@gmail.com'}))
 // describe('POST end points for user on /api/V1/users/cerate', async () => {
 it('should Create a USER', async (done) => {
+  // const userParam = new User(params)
+  // await userParam.save()
+
   const res = await request
     .post('/api/v1/users/create')
     .send({
@@ -59,9 +63,9 @@ it('should Create a USER', async (done) => {
     .expect('Content-Type', /json/)
     .expect(201)
 
-  const user = await User.findOne({ email: 'gohan25@gmail.com' })
+  // const user = await User.findOne({ email: 'gohan25@gmail.com' })
   // assert(response.body.data, user)
-  expect(res.body.data.email).toEqual(user.email)
+  expect(res.body.data.email).toEqual('gohan25@gmail.com')
   expect(res.body.success).toEqual(true)
   expect(res.statusCode).toEqual(201)
   expect(res.body).toHaveProperty('data')
@@ -90,10 +94,14 @@ it('should show all the users in index page', async () => {
 })
 
 test('should show all users api/v1/users', async () => {
-  const user = await User.create(params)
+  const param = {...params}
+  param.email = 'jiadtest23456@gmail.com'
+  const user = new User(param)
+  await user.save()
+  // const user = await User.create(params)
   const auth = await request
     .post('/api/v1/auth/login')
-    .send({ email: user.email, password: params.password })
+    .send({ email: param.email, password: param.password })
     .set('Accept', 'application/json')
 
   const token = auth.body.token
@@ -105,9 +113,11 @@ test('should show all users api/v1/users', async () => {
     .expect('Content-Type', /json/)
     .set('Authorization', `Bearer ${token}`)
     .expect(200)
+
 })
 
 test('should show 404 and user not found message', async () => {
+  const dlt = await User.deleteMany()
   const res = await request
     .get('/api/v1/users/5f63d16ab2cc340bac605923')
     .set('Accept', 'application/json')

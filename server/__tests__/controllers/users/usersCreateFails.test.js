@@ -13,10 +13,10 @@ dbConnect.setUpDB('mern-job-test-users-fail')
 
 
 describe('Test fail Name Errors', () => {
-  beforeEach(async () => {
-    await User.deleteMany()
-    await User.create(users)
-  })
+  // beforeEach(async () => {
+  //   // await User.deleteMany()
+  //   await User.create(users)
+  // })
   afterEach(async () => {
     await User.deleteMany()
   })
