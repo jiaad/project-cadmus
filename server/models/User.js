@@ -101,6 +101,11 @@ userSchema.methods.generateResetPassword = function async() {
   return resetToken
 }
 
+userSchema.pre('/^find/', function (next) {
+  console.log('*****___********** : PRE FIND MEYHOD CALLED')
+  next()
+})
+
 // userSchema.methods.signedJwtToken = function () {
 //   return jwt.sign({ id: this._id}, process.env.JWT_SECRET,{
 //       expiresIn: process.env.JWT_EXPIRE
