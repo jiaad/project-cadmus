@@ -55,6 +55,9 @@ reviewSchema.post('save', function () {
   this.constructor.calcAverageRantings(this.house)
   // next()
 })
+reviewSchema.pre('remove', function () {
+  this.constructor.calcAverageRantings(this.house)
+})
 
 const Review = mongoose.model('Review', reviewSchema)
 
