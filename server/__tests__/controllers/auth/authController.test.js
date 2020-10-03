@@ -1,9 +1,9 @@
 import supertest from 'supertest'
-import app from '../../app'
-import { setUpDB } from '../setUps/testDb'
-import User from '../../models/User'
-import users from '../setUps/usersSeed'
-const DBMemory = require('./../setUps/DBMemory')
+import app from '../../../app'
+import { setUpDB } from '../../setUps/testDb'
+import User from '../../../models/User'
+import users from '../../setUps/usersSeed'
+const DBMemory = require('../../setUps/DBMemory')
 
 const request = supertest(app)
 
