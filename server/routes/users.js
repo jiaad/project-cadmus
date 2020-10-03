@@ -6,6 +6,7 @@ import {
   show,
   update,
   deleteUser,
+  socialMediaHandles,
 } from '../controllers/usersController'
 import authenticateJWT from '../middleware/Auth'
 
@@ -17,5 +18,6 @@ router.post('/create', create)
 router.put('/:id/update', update)
 router.get('/:id', show)
 router.delete('/:id/delete', deleteUser)
+router.put('/:id/social-links', socialMediaHandles)
 
 module.exports = router
