@@ -7,11 +7,16 @@ const houseSchema = new mongoose.Schema(
     _userId: mongoose.Types.ObjectId,
     description: {
       type: String,
+      minlength: [10, 'The description must be more then 10 characters'],
     },
     homeType: {
       type: String,
       required: [true, 'Please provide type of your home'],
+      lowercase: true,
     },
+    // images: { url: String, public_id: String },\
+    //
+    images: { url: String, public_id: String },
     totalOccupancy: {
       type: Number,
       required: [true, 'Please provide max occupancy'],
@@ -24,18 +29,22 @@ const houseSchema = new mongoose.Schema(
       address: {
         type: String,
         required: [true, 'Please provide your street name'],
+        minlength: [10, 'Your address must be more then 10 characters'],
       },
       city: {
         type: String,
         required: [true, 'Please provide your city name'],
+        minlength: [3, 'Your city must be more then 10 characters'],
       },
       zipcode: {
         type: String,
         required: [true, 'Please provide your zipcode'],
+        minlength: [5, 'Your zipcode must be more then 10 characters'],
       },
       country: {
         type: String,
         required: [true, 'Please provide your country name'],
+        minlength: [3, 'Your country must be more then 3 characters'],
       },
     },
     location: {
