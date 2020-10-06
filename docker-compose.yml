@@ -20,6 +20,12 @@ services:
       - "27018:27017"
     volumes:
       - mernjobs:/data/db
-
+  redis:
+    container_name: redis-cache
+    image: redis
+    ports:
+      - '6379:6379'
+    command: ["redis-server", "--appendonly", "yes"]
+    hostname: redis
 volumes:
   mernjobs:
