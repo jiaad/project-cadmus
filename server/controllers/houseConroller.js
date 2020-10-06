@@ -5,12 +5,18 @@ import multer from 'multer'
 import fs from 'fs'
 import env from 'dotenv'
 import path from 'path'
+import redis from 'redis'
 
 import House from '../models/House'
 import asyncHandler from '../middleware/asyncHandler'
 import ErrorResponse from '../utils/errorResponse'
 import configCloudiry from '../utils/cloudinary'
 import { updatePhotos } from '../services/house.services'
+import { redisGetDataService } from '../services/redis.services'
+// const client = redis.createClient(6379)
+
+import { client, GET_ASYNC, SET_ASYNC } from '../config/redis'
+
 // const upload = multer({ dest: 'images/houses/' }).array('photos', 5)
 
 const cloudinary = require('cloudinary').v2
@@ -27,6 +33,25 @@ cloudinary.config({
 })
 
 module.exports = {
+  index: asyncHandler(async (req, res, next) => {
+    const getRedisData = await GET_ASYNC('houses')
+    if (getRedisData) {
+      console.log('using Cached Data')
+      res.status(200).json({ success: true, data: JSON.parse(getRedisData) })
+      return
+    }
+    await redisGetDataService('houses', res)
+    const houses = await House.find({})
+    const setRedisData = await SET_ASYNC(
+      'houses',
+      JSON.stringify(houses),
+      'EX',
+      10 * 10
+    )
+    console.log('new data cached:', setRedisData)
+    res.status(200).json({ success: true, data: houses })
+  }),
+
   create: asyncHandler(async (req, res, next) => {
     const house = await House.create(req.body)
     res.status(201).json({
@@ -38,9 +63,23 @@ module.exports = {
 
   show: asyncHandler(async (req, res, next) => {
     const id = req.params.id
+
+    const getRedisData = await GET_ASYNC(id)
+    if (getRedisData) {
+      console.log('using Cached Data')
+      res.status(200).json({ success: true, data: JSON.parse(getRedisData) })
+      return
+    }
+
     const house = await House.findById(id).populate('reviews')
+    if (!house) {
+      return next(new ErrorResponse('House not found', 404))
+    }
+    const setRedisData = await SET_ASYNC(id, 3600, JSON.stringify(house))
+    console.log('CACHED DATA, id:', setRedisData)
     res.status(200).json({ success: true, data: house })
   }),
+
   update: asyncHandler(async (req, res, next) => {
     const id = req.params.id
     const house = await House.findByIdAndUpdate(id, req.body, {
