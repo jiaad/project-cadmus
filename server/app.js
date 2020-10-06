@@ -18,10 +18,11 @@ const app = express()
 env.config({
   path: path.resolve(__dirname, '../.env'),
 })
-
+console.log('ljnl')
 console.log(process.env.CLOUDINARY_CLOUD_NAME)
 console.log(process.env.CLOUDINARY_API_KEY)
 console.log(process.env.CLOUDINARY_API_SECRET)
+console.log(process.env.MONGO_URI)
 
 const indexRouter = require('./routes/index')
 

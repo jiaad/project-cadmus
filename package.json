@@ -2,6 +2,8 @@
   "name": "express-jobs-2",
   "version": "0.0.0",
   "private": true,
+  "description": "ADVANCED API",
+  "main": "www",
   "scripts": {
     "test": "cross-env NODE_ENV=test jest --runInBand  --testTimeout=10000  --watch-all ",
     "test:report": "cross-env NODE_ENV=test jest --testTimeout=10000  --coverage --runInBand --detectOpenHandles",
