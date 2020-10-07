@@ -6,20 +6,25 @@ import {
   show,
   photosUpload,
   update,
-} from '../controllers/houseConroller'
-import redisCacheCheck from "../middleware/redisCheck"
+} from '../controllers/houseController'
 // const multer = require('multer')
 
 // const upload = multer({ dest: 'images/houses/' }) // .array('photos', 5)
+import {redisGetData} from "../middleware/redisCheck"
 
 const router = express.Router()
 
+const re = (req, res, next) => {
+  console.log(req.params.id)
+  next()
+}
 // Routes
-router.get('/', index)
+// DATA CATHING WITH REDIS : redisGetData
+router.get('/',redisGetData('houses'), index)
 router.post('/', create)
 router.put('/upload-photos/:id', photosUpload)
 router.route('/:id')
-  .get( show)
-  .put(update)
+.get(redisGetData(),show) // get the id automatically, don't need any param
+.put(update)
 
 module.exports = router

@@ -5,6 +5,7 @@ import path from 'path'
 const mongoose = require('mongoose')
 const asyncHandler = require('../middleware/asyncHandler')
 
+// const dbName = 'mongodb://mongo:27017/mernjobs'
 const dbName = 'mongodb://mongo:27017/mernjobs'
 env.config({
   path: path.resolve(__dirname, '../../.env'),
