@@ -5,15 +5,24 @@ import multer from 'multer'
 import fs from 'fs'
 import env from 'dotenv'
 import path from 'path'
+import redis from 'redis'
 
 import House from '../models/House'
 import asyncHandler from '../middleware/asyncHandler'
 import ErrorResponse from '../utils/errorResponse'
 import configCloudiry from '../utils/cloudinary'
 import { updatePhotos } from '../services/house.services'
+import { redisGetDataService } from '../services/redis.services'
+// const client = redis.createClient(6379)
+
+import { client, GET_ASYNC, SET_ASYNC } from '../config/redis'
+
 // const upload = multer({ dest: 'images/houses/' }).array('photos', 5)
 
 const cloudinary = require('cloudinary').v2
+const { promisify } = require('util')
+
+const unlinkFileasync = promisify(fs.unlink)
 
 env.config({
   path: path.resolve(__dirname, '../../.env'),
@@ -27,6 +36,18 @@ cloudinary.config({
 })
 
 module.exports = {
+  index: asyncHandler(async (req, res, next) => {
+    const houses = await House.find({})
+    const setRedisData = await SET_ASYNC(
+      'houses',
+      JSON.stringify(houses),
+      'EX',
+      10 * 10
+    )
+    console.log('new data cached:', setRedisData)
+    res.status(200).json({ success: true, data: houses })
+  }),
+
   create: asyncHandler(async (req, res, next) => {
     const house = await House.create(req.body)
     res.status(201).json({
@@ -38,9 +59,28 @@ module.exports = {
 
   show: asyncHandler(async (req, res, next) => {
     const id = req.params.id
+
+    // const getRedisData = await GET_ASYNC(id)
+    // if (getRedisData) {
+    //   console.log('using Cached Data')
+    //   res.status(200).json({ success: true, data: JSON.parse(getRedisData) })
+    //   return
+    // }
+
     const house = await House.findById(id).populate('reviews')
+    if (!house) {
+      return next(new ErrorResponse('House not found', 404))
+    }
+    const setRedisData = await SET_ASYNC(
+      id,
+      JSON.stringify(house),
+      'EX',
+      10 * 10
+    )
+    console.log('NEW CACHED DATA, id:', setRedisData)
     res.status(200).json({ success: true, data: house })
   }),
+
   update: asyncHandler(async (req, res, next) => {
     const id = req.params.id
     const house = await House.findByIdAndUpdate(id, req.body, {
@@ -61,31 +101,21 @@ module.exports = {
     avatar.mv(`./images/houses/${imageName}`)
     const ImagePath = `./images/houses/${imageName}`
     console.log('image PATH', ImagePath)
+
     try {
       const uploaded = await cloudinary.uploader.upload(ImagePath)
+      const imageObj = { url: uploaded.url, public_id: uploaded.public_id }
+      const delImage = await unlinkFileasync(ImagePath)
+      await House.findByIdAndUpdate(req.params.id, {
+        $set: {
+          images: imageObj,
+        },
+      })
     } catch (error) {
       console.log('CLOUDINARY ERROR:', error.message)
       return next(
         new ErrorResponse('Server Error while uploading to Cloudinary', 400)
       )
-    }
-
-    // Create an object of image to upload
-    // const imageObj = { url: uploaded.url, public_id: uploaded.public_id }
-
-    // Update with photos
-    // const house = await updatePhotos(req.params.id, House, imageObj)
-    // const house = await House.findByIdAndUpdate(
-    //   req.params.id,
-    //   {
-    //     images: imageObj,
-    //   },
-    //   { new: true }
-    // )
-    try {
-      fsPromises.unlink(ImagePath)
-    } catch (err) {
-      console.log(err)
     }
 
     // avatar.name = imageName
