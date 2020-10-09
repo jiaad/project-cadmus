@@ -1,0 +1,28 @@
+{
+  "_userId": "5f6f5d97b8c37d6e0d152e68",
+  "description": "welcome to my house",
+  "homeType": "appartement",
+  "totalOccupancy": 6,
+  "bedrooms": 5,
+  "address": {
+    "address": "3 rue du bocage",
+    "city": "paris",
+    "zipcode": "75015",
+    "country": "france"
+  },
+  "hasKitchen": true,
+  "hasAirConditionner": true,
+  "hasHeating": true,
+  "hasInternet": true,
+  "hasTv": true,
+  "price": 99,
+  "meta": {
+    "votes": 12,
+    "favs": 12,
+    "beds": 5,
+    "baths": 2
+  },
+  "services": ["lmao"],
+  "isOccupied": true,
+  "isHiden": false
+}

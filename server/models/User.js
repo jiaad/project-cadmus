@@ -5,6 +5,7 @@ import mongoose from 'mongoose'
 import bcrypt from 'bcryptjs'
 import jwt from 'jsonwebtoken'
 import crypto from 'crypto'
+import { isEmail } from 'validator'
 
 const userSchema = new mongoose.Schema(
   {
@@ -22,12 +23,27 @@ const userSchema = new mongoose.Schema(
       type: String,
       required: [true, 'Please enter your email'],
       unique: [true, 'Email allready exists'],
+      validate: [isEmail, 'invalid email'],
     },
     isVerified: {
       type: Boolean,
       default: false,
     },
-
+    socialMediaHandles: {
+      // https://mongoosejs.com/docs/schematypes.html#string-validators MAP
+      type: Map,
+      of: String,
+      // eslint-disable-next-line object-shorthand
+      validate: function (map) {
+        // eslint-disable-next-line no-restricted-syntax
+        for (const pseudo of map.values()) {
+          if (pseudo.startsWith('http://') || pseudo.startsWith('https://')) {
+            throw new Error(`Handle ${pseudo} must not be a URL`)
+          }
+        }
+        return true
+      },
+    },
     // dateOfBirth: {
     //     type: Date,
     //     required: [true, "Please choose your date of birth"]
@@ -38,6 +54,7 @@ const userSchema = new mongoose.Schema(
     },
     isActive: {
       type: Boolean,
+      // default: true,
       required: [true, 'Please enter your status'],
     },
     dateJoined: {
@@ -99,6 +116,15 @@ userSchema.methods.generateResetPassword = function async() {
   this.resetPasswordExpire = Date.now() + 10 * 60 * 1000
   return resetToken
 }
+
+// userSchema.pre('save', () => {
+//   this.socialMediaHandles
+// })
+
+userSchema.pre('/^find/', function (next) {
+  console.log('*****___********** : PRE FIND MEYHOD CALLED')
+  next()
+})
 
 // userSchema.methods.signedJwtToken = function () {
 //   return jwt.sign({ id: this._id}, process.env.JWT_SECRET,{

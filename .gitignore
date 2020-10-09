@@ -1,3 +1,8 @@
 node_modules
 views
 .env
+cadmus
+     ls.rb
+        nest.config.json
+        server/middleware/redisCheck.js
+        xterm-256color.ti

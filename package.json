@@ -2,6 +2,8 @@
   "name": "express-jobs-2",
   "version": "0.0.0",
   "private": true,
+  "description": "ADVANCED API",
+  "main": "www",
   "scripts": {
     "test": "cross-env NODE_ENV=test jest --runInBand  --testTimeout=10000  --watch-all ",
     "test:report": "cross-env NODE_ENV=test jest --testTimeout=10000  --coverage --runInBand --detectOpenHandles",
@@ -28,6 +30,7 @@
     "@babel/polyfill": "^7.11.5",
     "agenda": "^3.1.0",
     "bcryptjs": "^2.4.3",
+    "cloudinary": "^1.23.0",
     "cookie-parser": "^1.4.5",
     "cors": "^2.8.5",
     "debug": "~2.6.9",
@@ -35,14 +38,19 @@
     "ejs": "~2.6.1",
     "eslint-plugin-jest": "^24.0.2",
     "express": "~4.16.1",
+    "express-fileupload": "^1.2.0",
     "express-jwt": "^6.0.0",
     "http-errors": "~1.6.3",
     "http-status-codes": "^2.1.3",
     "jsonwebtoken": "^8.5.1",
     "mongoose": "^5.9.25",
     "morgan": "~1.9.1",
+    "multer": "^1.4.2",
+    "node-geocoder": "^3.27.0",
     "nodemailer": "^6.4.11",
-    "nodemon": "^2.0.4"
+    "nodemon": "^2.0.4",
+    "redis": "^3.0.2",
+    "validator": "^13.1.17"
   },
   "devDependencies": {
     "@babel/cli": "^7.11.6",

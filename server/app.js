@@ -1,6 +1,8 @@
 /* eslint-disable no-unused-vars */
 // env.config()
+import env from 'dotenv'
 import createError from 'http-errors'
+import fileUpload from 'express-fileupload'
 import express from 'express'
 import path from 'path'
 import cookieParser from 'cookie-parser'
@@ -12,8 +14,15 @@ import errorHandler from './middleware/errorHandler'
 const app = express()
 // const errorHandler = require('./middleware/errorHandler')
 
-// ENV AFTER IMOORTS
-const env = require('dotenv').config()
+// ENV AFTER IMPORTS
+env.config({
+  path: path.resolve(__dirname, '../.env'),
+})
+console.log('ljnl')
+console.log(process.env.CLOUDINARY_CLOUD_NAME)
+console.log(process.env.CLOUDINARY_API_KEY)
+console.log(process.env.CLOUDINARY_API_SECRET)
+console.log(process.env.MONGO_URI)
 
 const indexRouter = require('./routes/index')
 
@@ -35,6 +44,8 @@ app.use(express.urlencoded({ extended: false }))
 // app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser())
 app.use(express.static(path.join(__dirname, '../public')))
+
+app.use(fileUpload())
 
 app.use('/', router)
 

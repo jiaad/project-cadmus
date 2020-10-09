@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import httpStatusCode from 'http-status-codes'
 import asyncHandler from '../middleware/asyncHandler'
 import User from '../models/User'
@@ -48,5 +49,17 @@ module.exports = {
     res
       .status(httpStatusCode.OK)
       .json({ success: true, msg: 'successfully deleted user', data: {} })
+  }),
+  socialMediaHandles: asyncHandler(async (req, res, next) => {
+    const id = req.params.id
+    console.log(req.body)
+    const handlesBody = req.body
+    const user = await User.findById(id)
+    Object.keys(handlesBody).forEach((key) => {
+      user.socialMediaHandles.set(key, handlesBody[key])
+    })
+    await user.save()
+
+    res.status(200).json({ success: true, data: handlesBody })
   }),
 }
