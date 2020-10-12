@@ -43,7 +43,7 @@ module.exports = {
     if_user_not_isVerified_or_doesnt_exists(user, next)
     const isMatch = await user.comparePassword(password)
     if (!isMatch) return next(new ErrorResponse(`Invalid credentials`, 401))
-    return sendTokenResponse(user, 200, res)
+    sendTokenResponse(user, 200, res)
   }),
 
   signUp: asyncHandler(async (req, res, next) => {

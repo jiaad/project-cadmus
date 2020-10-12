@@ -18,7 +18,7 @@ const authenticateJWT = asyncHandler(async (req, res, next) => {
   console.log('BEARER :::', token)
 
   if (!token) {
-    return next(new ErrorResponse('not authorized to access this route', 401))
+    return next(new ErrorResponse('You have to sign in', 401))
   }
   try {
     const verified = await jwt.verify(token, process.env.JWT_SECRET)
@@ -29,7 +29,10 @@ const authenticateJWT = asyncHandler(async (req, res, next) => {
     next()
   } catch (error) {
     return next(
-      new ErrorResponse('Not authorized to access to this route we eeee', 401)
+      new ErrorResponse(
+        'Not authorized to access to this route you must sign in',
+        401
+      )
     )
   }
 })
@@ -37,6 +40,12 @@ const authenticateJWT = asyncHandler(async (req, res, next) => {
 // const protect = (req, res, next) => {
 //   // let user = req.user
 //   // if(user.email)
+// }
+
+// const authorize = function (params) {
+//   return asyncHandler(async (req, res, next) => {
+
+//   })
 // }
 
 // module.exports = { authenticateJWT, protect }
