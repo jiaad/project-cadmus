@@ -40,7 +40,7 @@ describe('CREATE HOUSES', () => {
   const res = await request
     .post('/api/v1/houses')
     .send(house)
-    .set('Accpect', 'application/json')
+    .set('Accept', 'application/json')
     .expect('Content-Type', /json/)
     .expect(201)
 
@@ -64,7 +64,7 @@ describe('SHOULD NOT CREATE HOUSES', () => {
   const res = await request
     .post('/api/v1/houses')
     .send(house)
-    .set('Accpect', 'application/json')
+    .set('Accept', 'application/json')
     .expect('Content-Type', /json/)
     .expect(400)
 
