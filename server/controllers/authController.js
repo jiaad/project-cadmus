@@ -157,9 +157,9 @@ module.exports = {
     } catch (e) {
       reset_user_model_tokens(user, next, httpStatusCodes)
     }
-    res
-      .status(httpStatusCodes.OK)
-      .json({ success: true, msg: 'Message sent', data: user })
+    // res
+    //   .status(httpStatusCodes.OK)
+    //   .json({ success: true, msg: 'Message sent', data: user })
   }),
 
   resetPassword: asyncHandler(async (req, res, next) => {
@@ -179,6 +179,6 @@ module.exports = {
 
     await user.save()
     sendTokenResponse(user, 200, res)
-    res.status(200).json({ success: true, data: user })
+    // res.status(200).json({ success: true, data: user })
   }),
 }

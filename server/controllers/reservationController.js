@@ -9,20 +9,20 @@ import asyncHandler from '../middleware/asyncHandler'
 import Reservation from '../models/Reservation'
 import House from '../models/House'
 
-const verifyReservation = async (ReserveModel, HouseModel, req, next) => {
-  const houseId = req.params.id
-  const house = HouseModel.findById(houseId)
-  if (!house) {
-    return next(new ErrorResponse(`House doesn't exists`, 404))
-  }
-  // je trouve le ReserveModel
-  const reserve = await ReserveModel.findOne({ _houseId: houseId })
-  if (reserve) {
-    console.log('THE RESERVE MODEL EXISTS')
-    return true
-  }
-  return false
-}
+// const verifyReservation = async (ReserveModel, HouseModel, req, next) => {
+//   const houseId = req.params.id
+//   const house = HouseModel.findById(houseId)
+//   if (!house) {
+//     return next(new ErrorResponse(`House doesn't exists`, 404))
+//   }
+//   // je trouve le ReserveModel
+//   const reserve = await ReserveModel.findOne({ _houseId: houseId })
+//   if (reserve) {
+//     console.log('THE RESERVE MODEL EXISTS')
+//     return true
+//   }
+//   return false
+// }
 
 const reservations = {
   create: asyncHandler(async (req, res, next) => {
