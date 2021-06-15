@@ -3,10 +3,10 @@ const redis = require('redis')
 const { promisify } = require('util')
 
 const client = redis.createClient({
-  port: '6379',
-  host: 'redis-cache',
-  // host: 'localhost',
-  // password  : 'redispassword',
+  // port: '6379',
+  // host: 'redis-cache',
+  host: 'localhost',
+  password: 'redispassword',
 })
 
 const GET_ASYNC = promisify(client.get).bind(client)

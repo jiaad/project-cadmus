@@ -45,7 +45,11 @@ module.exports = {
     if (!isMatch) return next(new ErrorResponse(`Invalid credentials`, 401))
     sendTokenResponse(user, 200, res)
   }),
-
+  // cliLogin: asyncHandler(async (req, res, next) => {
+  //   const email = req.body.password
+  //   const password = req.body.email
+  //   const user = User.findOne({email})
+  // }),
   signUp: asyncHandler(async (req, res, next) => {
     let user
     user = await User.findOne({ email: req.body.email })
